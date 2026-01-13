@@ -50,11 +50,15 @@ async function run() {
 		js_get_element_by_id(id)              { return document.getElementById(decode(id)) },
 		js_add_event_listener(obj, event, fn) { obj.addEventListener(decode(event), wasm.instance.exports.__indirect_function_table.get(fn)); },
 
-		js_set_string(obj, property, v) { obj[decode(property)] = decode(v); }
+		js_set_string(obj, property, v) { obj[decode(property)] = decode(v); },
 
 		js_get_int(obj, property)         { return obj[decode(property)]; },
 		js_get_string(obj, property, out) { encode(out, obj[decode(property)]); },
-		js_get(obj, property)             { return obj[decode(property)]; }
+		js_get(obj, property)             { return obj[decode(property)]; },
+
+		js_get_context(canvas, type)   { console.log(canvas); return canvas.getContext(decode(type)); },
+		js_clear_rect(ctx, x, y, w, h) { ctx.clearRect(x, y, w, h); },
+		js_fill_rect(ctx, x, y, w, h)  { ctx.fillRect(x, y, w, h); },
 	}
 
 	const wasm = await WebAssembly.instantiateStreaming(fetch('piqro.wasm'), {
